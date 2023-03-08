@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { ThemeProvider } from "styled-components/native";
+import theme from "@theme/index";
+//import { NewGroup } from "@screens/NewGroup";
+import { Groups } from "@screens/Groups";
+import {
+  useFonts,
+  Roboto_400Regular,
+  Roboto_700Bold,
+} from "@expo-google-fonts/roboto";
+import { Loading } from "@components/Loading";
+import { StatusBar } from "react-native";
 
 export default function App() {
+  const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
+
   return (
-    <View style={styles.container}>
-      <Text>Bora codar!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ThemeProvider theme={theme}>
+      <StatusBar 
+        barStyle='light-content'
+        backgroundColor='transparent'
+        translucent
+      />
+      {fontsLoaded ? <Groups /> : <Loading />}
+    </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
