@@ -1,7 +1,6 @@
 import { ThemeProvider } from "styled-components/native";
 import theme from "@theme/index";
-//import { NewGroup } from "@screens/NewGroup";
-import { Groups } from "@screens/Groups";
+import { Routes } from "./src/routes";
 import {
   useFonts,
   Roboto_400Regular,
@@ -20,7 +19,7 @@ export default function App() {
         backgroundColor='transparent'
         translucent
       />
-      {fontsLoaded ? <Groups /> : <Loading />}
+      {fontsLoaded ? <Routes /> : <Loading />}
     </ThemeProvider>
   );
 }
