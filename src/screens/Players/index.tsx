@@ -10,6 +10,7 @@ import { Filter } from "@components/Filter";
 import { PlayerCard } from "@components/PlayerCard";
 import { ListEmpty } from "@components/ListEmpty";
 import { Button } from "@components/Button";
+import { Loading } from "@components/Loading";
 
 import * as S from "./styles";
 
@@ -21,11 +22,13 @@ import { playersGetByGroupAndTeam } from "@storage/player/playersGetByGroupAndTe
 import { playerRemoveByGroup } from "@storage/player/playerRemoveByGroup";
 import { groupRemoveByName } from "@storage/group/groupRemoveByName";
 
+
 type RouteParams = {
   group: string;
 };
 
 export function Players() {
+  const [isLoading, setIsLoading] = useState(true)
   const [newPlayerName, setNewPlayerName] = useState("");
   const [team, setTeam] = useState("Time A");
   const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
@@ -69,8 +72,12 @@ export function Players() {
 
   async function fetchPlayersByTeam() {
     try {
+      setIsLoading(true)
+      
       const playersByTeam = await playersGetByGroupAndTeam(group, team);
       setPlayers(playersByTeam);
+
+      setIsLoading(false)
     } catch (error) {
       console.log(error);
       Alert.alert(
@@ -154,6 +161,8 @@ export function Players() {
         <S.NumberOfPlayers>{players.length}</S.NumberOfPlayers>
       </S.HeaderList>
 
+      { isLoading ? <Loading/> :
+    
       <FlatList
         data={players}
         keyExtractor={(item) => item.name}
@@ -171,7 +180,7 @@ export function Players() {
           players.length === 0 && { flex: 1 },
         ]}
       />
-
+      }
       <Button 
         title="Remover Turma" 
         type="SECONDARY" 

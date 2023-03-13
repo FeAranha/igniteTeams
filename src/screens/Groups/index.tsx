@@ -3,6 +3,7 @@ import { GroupCard } from "@components/GroupCard";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
 import { ListEmpty } from "@components/ListEmpty";
+import { Loading } from "@components/Loading";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { groupGetAll } from "@storage/group/groupsGetAll";
 import { useCallback, useState } from "react";
@@ -10,6 +11,7 @@ import { FlatList } from "react-native";
 import * as S from "./styles";
 
 export function Groups() {
+  const [isLoading, setIsLoading] = useState(true)
   const [groups, setGroups] = useState<string[]>([]);
 
   const navigation = useNavigation();
@@ -20,8 +22,12 @@ export function Groups() {
 
   async function fetchGroups() {
     try {
+      setIsLoading(true)
+
       const data = await groupGetAll()
       setGroups(data)
+
+      setIsLoading(false)
     } catch (error) {
       console.log(error)
     }
@@ -39,6 +45,10 @@ export function Groups() {
     <S.Container>
       <Header showBackButton />
       <Highlight title="Turmas" subtitle="Jogue com a sua turma" />
+
+      { 
+      isLoading ? <Loading/> :
+
       <FlatList
         data={groups}
         keyExtractor={(item) => item}
@@ -53,7 +63,7 @@ export function Groups() {
           <ListEmpty message="Que tal cadastrar a primeira turma?" />
         )}
       />
-
+      }
       <Button title="Criar nova Turma" onPress={handleNewGroup} />
     </S.Container>
   );
